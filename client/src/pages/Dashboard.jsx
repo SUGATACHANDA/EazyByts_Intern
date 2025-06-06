@@ -1,10 +1,12 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import dayjs from 'dayjs';
+import { Menu, X, Loader2 } from 'lucide-react';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import API from '../config/api';
+import { getAdminEmail, getContactMessages } from '../api/dashboardApi';
+import ContactTab from '../components/ContactTab';
+import SkillList from '../components/SkillTab';
+import SkillManager from '../components/SkillManager';
 
 const Dashboard = () => {
     const [email, setEmail] = useState('');
@@ -12,6 +14,7 @@ const Dashboard = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState('all');
+    const [menuOpen, setMenuOpen] = useState(false);
 
     const navigate = useNavigate();
     const tabs = ['contact', 'skills', 'projects', 'achievements'];
@@ -19,32 +22,13 @@ const Dashboard = () => {
 
     const handleTabChange = (tab) => {
         setSearchParams({ tab });
+        setMenuOpen(false); // close menu on selection
     };
 
     const handleLogout = () => {
         localStorage.removeItem('token');
         navigate('/admin-login', { replace: true });
     };
-
-    const filterMessages = (messages) => {
-        const now = dayjs();
-        switch (filter) {
-            case 'today':
-                return messages.filter((msg) => dayjs(msg.createdAt).isSame(now, 'day'));
-            case 'last7':
-                return messages.filter((msg) =>
-                    dayjs(msg.createdAt).isAfter(now.subtract(7, 'day'))
-                );
-            case 'last30':
-                return messages.filter((msg) =>
-                    dayjs(msg.createdAt).isAfter(now.subtract(30, 'day'))
-                );
-            default:
-                return messages;
-        }
-    };
-
-    const filteredMessages = filterMessages(messages);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -53,45 +37,102 @@ const Dashboard = () => {
             return;
         }
 
-        try {
-            const decoded = jwtDecode(token);
-            const userId = decoded.id;
+        const fetchData = async () => {
+            try {
+                const decoded = jwtDecode(token);
+                const userId = decoded.id;
 
-            // Fetch admin email
-            axios
-                .get(`${API}/auth/dashboard`, {
-                    headers: { Authorization: `Bearer ${token}` },
-                })
-                .then((res) => setEmail(res.data.email || ''));
+                const emailRes = await getAdminEmail(token);
+                setEmail(emailRes);
 
-            // Fetch contact messages
-            axios
-                .get(`${API}/contact/all`, {
-                    headers: { Authorization: `Bearer ${token}` },
-                })
-                .then((res) => {
-                    setMessages(res.data || []);
-                    setLoading(false);
-                })
-                .catch(() => {
-                    localStorage.removeItem('token');
-                    navigate('/admin-login', { replace: true });
-                });
-        } catch {
-            localStorage.removeItem('token');
-            navigate('/admin-login', { replace: true });
-        }
-    }, [navigate]);
+                if (currentTab === 'contact') {
+                    const messageRes = await getContactMessages(token);
+                    setMessages(messageRes || []);
+                }
 
-    if (loading)
-        return <p className="p-10 bg-gray-100 text-black text-center">Loading dashboard...</p>;
+                setLoading(false);
+            } catch (err) {
+                localStorage.removeItem('token');
+                navigate('/admin-login', { replace: true });
+            }
+        };
+
+        fetchData();
+    }, [currentTab, navigate]);
+
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gray-100 text-black">
+                <Loader2 className="animate-spin mr-2" /> Loading Dashboard
+            </div>
+        );
+    }
 
     return (
-        <div className="min-h-screen bg-gray-100 p-6">
+        <div className="min-h-screen bg-gray-100 px-4 py-6 sm:px-6 lg:px-8">
+            {/* Header */}
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl text-black font-bold">Dashboard</h1>
+                <h1 className="text-2xl sm:text-3xl text-black font-bold">Dashboard</h1>
+                {/* Mobile Menu Toggle */}
+                <button
+                    className="sm:hidden p-2 rounded bg-purple-600 text-white"
+                    onClick={() => setMenuOpen(!menuOpen)}
+                >
+                    {menuOpen ? <X size={20} /> : <Menu size={20} />}
+                </button>
+            </div>
+
+            {/* Hamburger Menu Content (mobile) */}
+            {menuOpen && (
+                <div className="sm:hidden mb-6 bg-white p-4 rounded shadow space-y-4">
+
+                    <nav className="flex flex-col gap-2">
+                        {tabs.map((tab) => (
+                            <button
+                                key={tab}
+                                onClick={() => handleTabChange(tab)}
+                                className={`text-left px-4 py-2 rounded capitalize ${currentTab === tab
+                                    ? 'bg-purple-600 text-white'
+                                    : 'bg-gray-100 text-gray-700 hover:bg-purple-100'
+                                    }`}
+                            >
+                                {tab}
+                            </button>
+                        ))}
+                    </nav>
+                    <div className="text-sm text-gray-700 bg-gray-100 px-3 py-2 rounded">
+                        {email}
+                    </div>
+                    <button
+                        onClick={handleLogout}
+                        className="w-full bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+                    >
+                        Logout
+                    </button>
+                </div>
+            )}
+
+            {/* Desktop View: Tabs + Info */}
+            <div className="hidden sm:flex justify-between items-center mb-6">
+
+                <nav className="flex gap-3">
+                    {tabs.map((tab) => (
+                        <button
+                            key={tab}
+                            onClick={() => handleTabChange(tab)}
+                            className={`px-4 py-2 rounded capitalize ${currentTab === tab
+                                ? 'bg-purple-600 text-white'
+                                : 'bg-white text-gray-700 border hover:bg-purple-100'
+                                }`}
+                        >
+                            {tab}
+                        </button>
+                    ))}
+                </nav>
                 <div className="flex gap-4 items-center">
-                    <span className="text-sm text-gray-700 bg-white px-3 py-1 rounded-full shadow">{email}</span>
+                    <span className="text-sm text-gray-700 bg-white px-3 py-1 rounded-full shadow">
+                        {email}
+                    </span>
                     <button
                         onClick={handleLogout}
                         className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
@@ -101,69 +142,21 @@ const Dashboard = () => {
                 </div>
             </div>
 
-            {/* Nav Tabs */}
-            <nav className="flex gap-4 mb-6">
-                {tabs.map((tab) => (
-                    <button
-                        key={tab}
-                        onClick={() => handleTabChange(tab)}
-                        className={`px-4 py-2 rounded capitalize ${currentTab === tab
-                                ? 'bg-purple-600 text-white'
-                                : 'bg-white text-gray-700 border'
-                            }`}
-                    >
-                        {tab}
-                    </button>
-                ))}
-            </nav>
-
-            {/* Tab Content */}
-            <div className="bg-white p-6 rounded shadow">
+            {/* Main Content */}
+            <div className="bg-white p-4 sm:p-6 rounded shadow">
                 {currentTab === 'contact' && (
-                    <>
-                        <div className="mb-4 flex justify-between items-center">
-                            <h2 className="text-xl font-semibold">Contact Messages</h2>
-                            <select
-                                value={filter}
-                                onChange={(e) => setFilter(e.target.value)}
-                                className="border px-3 py-1 rounded bg-white text-gray-700"
-                            >
-                                <option value="all">All</option>
-                                <option value="today">Today</option>
-                                <option value="last7">Last 7 Days</option>
-                                <option value="last30">Last 30 Days</option>
-                            </select>
-                        </div>
-
-                        {filteredMessages.length === 0 ? (
-                            <p className="text-gray-500">No messages found in selected range.</p>
-                        ) : (
-                            <div className="grid md:grid-cols-2 gap-4">
-                                {filteredMessages.map((msg) => (
-                                    <div
-                                        key={msg._id}
-                                        className="border rounded-lg p-4 bg-gray-50 shadow-sm"
-                                    >
-                                        <h3 className="font-bold text-blue-700 mb-1">{msg.title}</h3>
-                                        <p className="text-gray-800 mb-2">{msg.message}</p>
-                                        <div className="text-sm text-gray-600">
-                                            From: {msg.name} ({msg.email})
-                                        </div>
-                                        <div className="text-xs text-gray-400 mt-1">
-                                            {new Date(msg.createdAt).toLocaleString()}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </>
+                    <ContactTab
+                        messages={messages}
+                        filter={filter}
+                        setFilter={setFilter}
+                    />
                 )}
 
                 {currentTab === 'skills' && (
-                    <div>
-                        <h2 className="text-xl font-semibold mb-4">Skills</h2>
-                        <p className="text-gray-600">[Skills content goes here]</p>
-                    </div>
+                    <>
+                        {/* <SkillList /> */}
+                        <SkillManager />
+                    </>
                 )}
 
                 {currentTab === 'projects' && (

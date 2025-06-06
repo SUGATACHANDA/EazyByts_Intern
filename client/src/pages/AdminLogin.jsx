@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import API from "../config/api"
 import { useNavigate } from "react-router-dom";
-import { Loader } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { useEffect } from "react";
 
 const AdminLogin = () => {
@@ -15,7 +15,6 @@ const AdminLogin = () => {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            // Extra safety: replace the URL and hard redirect
             navigate('/admin', { replace: true });
         }
     }, [navigate]);
@@ -75,7 +74,7 @@ const AdminLogin = () => {
                     >
                         {loading ? <>
                             <div className="flex items-center justify-center">
-                                <Loader className="animate-spin text-purple-400" />
+                                <Loader2 className="animate-spin text-purple-400" />
                             </div>
                         </> : 'Login'}
                     </button>
