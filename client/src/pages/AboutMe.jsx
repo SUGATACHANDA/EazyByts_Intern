@@ -1,23 +1,52 @@
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
 import Footer from '../components/Footer';
+import { useEffect, useState } from 'react';
+import { getAllSkills } from '../api/skillApi';
+import { getFunFacts } from '../api/funFactApi';
+import dev_image from "../../public/dev_image.png"
 
 const AboutMePage = () => {
-    const skills = {
-        Languages: ["TypeScript", "Lua", "Python", "JavaScript"],
-        Other: ["HTML", "CSS", "EJS", "SCSS", "REST", "Jinja"],
-        Tools: ["VSCode", "Neovim", "Linux", "Figma", "XFCE", "Arch", "Git", "Font Awesome", "KDE", "fish"],
-        Databases: ["SQLite", "PostgreSQL", "Mongo"],
-        Frameworks: ["React", "Vue", "Disnake", "Discord.js", "Flask", "Express.js"]
-    };
 
-    const funFacts = [
-        "I like winter more than summer",
-        "I often bike with my friends",
-        "I like pizza and pasta",
-        "My favorite tv show is The Family Guy",
-        "I don't have any siblings"
-    ];
+    const [funFacts, setFunFacts] = useState([]);
+
+    // Fun Facts
+    useEffect(() => {
+        const fetchFunFacts = async () => {
+            try {
+                const res = await getFunFacts();
+                setFunFacts(res || []);
+            } catch (err) {
+                console.error('Failed to fetch fun facts:', err);
+            }
+        };
+
+        fetchFunFacts();
+    }, []);
+
+    const [skills, setSkills] = useState([])
+
+    const categories = ['Language', 'Framework', 'Tool', 'Database', 'Other'];
+
+    // Skills
+    useEffect(() => {
+        const fetchSkills = async () => {
+            try {
+                const data = await getAllSkills();
+                setSkills(data || []);
+            } catch (err) {
+                console.error('Failed to fetch skills:', err);
+            }
+        };
+
+        fetchSkills();
+    }, []);
+
+    // Group skills by category
+    const groupedSkills = categories.map((cat) => ({
+        title: cat + (cat === 'Other' ? '' : 's'),
+        skills: skills.filter((s) => s.category === cat).map((s) => s.name)
+    }));
 
     return (
         <div className="bg-gray-900 text-white min-h-screen">
@@ -59,8 +88,8 @@ const AboutMePage = () => {
 
                         <div className="relative">
                             <img
-                                src="https://placehold.co/400x500/2D2D2D/FFFFFF?text=Developer+Portrait"
-                                alt="Elias - Web Designer and Front-end Developer"
+                                src={dev_image}
+                                alt="Sugata - Web Designer and Front-end Developer"
                                 className="w-full max-w-md mx-auto z-10 relative"
                             />
 
@@ -89,19 +118,23 @@ const AboutMePage = () => {
                         </h2>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {Object.entries(skills).map(([category, skillList]) => (
-                                <div key={category} className="border border-gray-700">
+                            {groupedSkills.map((category, index) => (
+                                <div key={index} className="border border-gray-700">
                                     <div className="bg-gray-800 px-4 py-2 border-b border-gray-700">
-                                        <h3 className="font-semibold">{category}</h3>
+                                        <h3 className="font-semibold">{category.title}</h3>
                                     </div>
                                     <div className="p-4">
                                         <div className="flex flex-wrap gap-2">
-                                            {skillList.map((skill, index) => (
-                                                <span key={index} className="text-gray-300 text-sm">
-                                                    {skill}
-                                                    {index < skillList.length - 1 && ' '}
-                                                </span>
-                                            ))}
+                                            {category.skills.length > 0 ? (
+                                                category.skills.map((skill, skillIndex) => (
+                                                    <span key={skillIndex} className="text-gray-300 text-sm">
+                                                        {skill}
+                                                        {skillIndex < category.skills.length - 1 && ','}
+                                                    </span>
+                                                ))
+                                            ) : (
+                                                <span className="text-gray-500 text-sm">No skills yet.</span>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -116,11 +149,16 @@ const AboutMePage = () => {
                         </h2>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl">
-                            {funFacts.map((fact, index) => (
-                                <div key={index} className="border border-gray-700 px-4 py-2">
-                                    {fact}
-                                </div>
-                            ))}
+                            {funFacts.length === 0 ? (
+                                <p className="text-gray-500 text-sm">No fun facts found.</p>
+                            ) : (
+                                funFacts.map((fact, index) => (
+                                    <div key={index} className="border border-gray-700 px-4 py-2">
+                                        <span className="font-semibold">{fact.value}</span>
+                                    </div>
+                                ))
+                            )}
+
                         </div>
 
                         {/* Decorative elements */}

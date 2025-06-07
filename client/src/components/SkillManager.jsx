@@ -74,7 +74,7 @@ const SkillManager = () => {
         <div className="space-y-8">
             {/* Right-aligned Add Skill Button */}
             <div className="flex justify-between">
-                <p className='text-black mt-2 font-semibold'>My Skills</p>
+                <h2 className="text-xl text-black font-semibold">My Skills</h2>
                 <button
                     onClick={() => {
                         setShowForm(!showForm);

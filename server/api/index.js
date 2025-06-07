@@ -5,6 +5,8 @@ const cors = require('cors');
 const authRoutes = require('../routes/auth')
 const contactRoutes = require('../routes/contactRoutes.js');
 const skillRoutes = require("../routes/skillRoutes.js")
+const funFactRoutes = require('../routes/funFactRoutes.js');
+const projectRoutes = require('../routes/projectRoutes.js');
 
 dotenv.config();
 
@@ -21,6 +23,8 @@ mongoose.connect(process.env.MONGO_URI, {
 app.use('/api/auth', authRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/skills', skillRoutes);
+app.use('/api/funfacts', funFactRoutes);
+app.use('/api/projects', projectRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

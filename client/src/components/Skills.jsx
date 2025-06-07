@@ -1,26 +1,29 @@
+import { useEffect, useState } from 'react';
+import { getAllSkills } from '../api/skillApi';
+
 const Skills = () => {
-    const skillCategories = [
-        {
-            title: "Languages",
-            skills: ["TypeScript", "Lua", "Python", "JavaScript"]
-        },
-        {
-            title: "Databases",
-            skills: ["SQLite", "PostgreSQL", "Mongo"]
-        },
-        {
-            title: "Tools",
-            skills: ["VSCode", "Neovim", "Linux", "Figma", "XFCE", "Arch", "Git", "Font Awesome"]
-        },
-        {
-            title: "Other",
-            skills: ["HTML", "CSS", "EJS", "SCSS", "REST", "Jinja"]
-        },
-        {
-            title: "Frameworks",
-            skills: ["React", "Vue", "Disnake", "Discord.js", "Flask", "Express.js"]
-        }
-    ];
+    const [skills, setSkills] = useState([]);
+
+    const categories = ['Language', 'Framework', 'Tool', 'Database', 'Other'];
+
+    useEffect(() => {
+        const fetchSkills = async () => {
+            try {
+                const data = await getAllSkills();
+                setSkills(data || []);
+            } catch (err) {
+                console.error('Failed to fetch skills:', err);
+            }
+        };
+
+        fetchSkills();
+    }, []);
+
+    // Group skills by category
+    const groupedSkills = categories.map((cat) => ({
+        title: cat + (cat === 'Other' ? '' : 's'),
+        skills: skills.filter((s) => s.category === cat).map((s) => s.name)
+    }));
 
     return (
         <section className="px-8 py-20 max-w-7xl mx-auto">
@@ -42,19 +45,23 @@ const Skills = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {skillCategories.map((category, index) => (
+                    {groupedSkills.map((category, index) => (
                         <div key={index} className="border border-gray-600">
                             <div className="bg-gray-800 px-4 py-2 border-b border-gray-600">
                                 <h3 className="font-semibold">{category.title}</h3>
                             </div>
                             <div className="p-4">
                                 <div className="flex flex-wrap gap-2">
-                                    {category.skills.map((skill, skillIndex) => (
-                                        <span key={skillIndex} className="text-gray-300 text-sm">
-                                            {skill}
-                                            {skillIndex < category.skills.length - 1 && ','}
-                                        </span>
-                                    ))}
+                                    {category.skills.length > 0 ? (
+                                        category.skills.map((skill, skillIndex) => (
+                                            <span key={skillIndex} className="text-gray-300 text-sm">
+                                                {skill}
+                                                {skillIndex < category.skills.length - 1 && ','}
+                                            </span>
+                                        ))
+                                    ) : (
+                                        <span className="text-gray-500 text-sm">No skills yet.</span>
+                                    )}
                                 </div>
                             </div>
                         </div>

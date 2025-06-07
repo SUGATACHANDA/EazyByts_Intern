@@ -1,3 +1,4 @@
+import dev_image from "../../public/dev_image.png"
 const About = () => {
     return (
         <section id="about-me" className="px-8 py-20 max-w-7xl mx-auto">
@@ -28,8 +29,8 @@ const About = () => {
 
                 <div className="relative">
                     <img
-                        src="https://placehold.co/400x200/2D2D2D/FF6B35?text=SugataChanda"
-                        alt="Elias working on computer"
+                        src={dev_image}
+                        alt="Sugata working on computer"
                         className="w-full max-w-md mx-auto"
                     />
 

@@ -7,6 +7,8 @@ import { getAdminEmail, getContactMessages } from '../api/dashboardApi';
 import ContactTab from '../components/ContactTab';
 import SkillList from '../components/SkillTab';
 import SkillManager from '../components/SkillManager';
+import FunFactManager from '../components/FunFactManager';
+import ProjectManager from '../components/ProjectManager';
 
 const Dashboard = () => {
     const [email, setEmail] = useState('');
@@ -17,7 +19,7 @@ const Dashboard = () => {
     const [menuOpen, setMenuOpen] = useState(false);
 
     const navigate = useNavigate();
-    const tabs = ['contact', 'skills', 'projects', 'achievements'];
+    const tabs = ['contact', 'skills', 'projects', 'fun facts'];
     const currentTab = searchParams.get('tab') || 'contact';
 
     const handleTabChange = (tab) => {
@@ -160,17 +162,11 @@ const Dashboard = () => {
                 )}
 
                 {currentTab === 'projects' && (
-                    <div>
-                        <h2 className="text-xl font-semibold mb-4">Projects</h2>
-                        <p className="text-gray-600">[Projects content goes here]</p>
-                    </div>
+                    <ProjectManager />
                 )}
 
-                {currentTab === 'achievements' && (
-                    <div>
-                        <h2 className="text-xl font-semibold mb-4">Achievements</h2>
-                        <p className="text-gray-600">[Achievements content goes here]</p>
-                    </div>
+                {currentTab === 'fun facts' && (
+                    <FunFactManager />
                 )}
             </div>
         </div>

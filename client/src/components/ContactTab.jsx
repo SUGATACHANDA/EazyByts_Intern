@@ -22,7 +22,7 @@ const ContactTab = ({ messages, filter, setFilter }) => {
     return (
         <>
             <div className="mb-4 flex justify-between items-center">
-                <h2 className="text-xl font-semibold">Contact Messages</h2>
+                <h2 className="text-xl text-black font-semibold">Contact Messages</h2>
                 <select
                     value={filter}
                     onChange={(e) => setFilter(e.target.value)}

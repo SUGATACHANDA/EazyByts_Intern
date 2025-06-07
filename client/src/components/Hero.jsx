@@ -1,3 +1,4 @@
+import dev_image from "../../public/dev_image.png"
 const Hero = () => {
     return (
         <section id="home" className="px-8 py-20 max-w-7xl mx-auto">
@@ -20,8 +21,8 @@ const Hero = () => {
                 <div className="relative">
                     <div className="relative pb-12">
                         <img
-                            src="https://eliasdevis.github.io/images/hero.png"
-                            alt="Elias - Web Designer and Front-end Developer"
+                            src={dev_image}
+                            alt="Sugata - Web Designer and Front-end Developer"
                             className="w-full max-w-md mx-auto"
                         />
 
