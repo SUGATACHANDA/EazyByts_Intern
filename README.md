@@ -150,6 +150,13 @@ npm run dev
 
 Frontend runs by default at: http://localhost:5173/
 
+### 3️⃣ Credentials for Admin Login
+
+```bash
+email: admin@portfolio.com
+password: admin123456789
+```
+
 ## 🛠 Features Breakdown
 
 | Feature          | Admin Dashboard | Public Website    |

@@ -11,7 +11,7 @@ dotenv.config();
 const cors = require('cors');
 
 const corsOptions = {
-    origin: 'https://eazy-byts-five.vercel.app',
+    origin: 'https://sugata-chanda.vercel.app',
     // origin: 'http://localhost:5173/',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true, // allow cookies and credentials
@@ -40,7 +40,7 @@ app.get('/', (req, res) => {
 });
 
 app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "https://eazy-byts-five.vercel.app");
+    res.header("Access-Control-Allow-Origin", "https://sugata-chanda.vercel.app");
     // res.header("Access-Control-Allow-Origin", "http://localhost:5173/");
     res.header("Access-Control-Allow-Methods", "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS");
     res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
