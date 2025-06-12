@@ -20,9 +20,6 @@ Built using **React**, **Node.js**, **Express**, and **MongoDB**, with a respons
 ## 📁 Project Structure
 
 ```
-
-```
-
 📦 EazyByts
 ├─ client
 │  ├─ .env
@@ -102,8 +99,8 @@ Built using **React**, **Node.js**, **Express**, and **MongoDB**, with a respons
    │  └─ seedAdmin.js
    └─ utils
       └─ contactEmailTemplate.js
+```
 
-````
 ## 🚀 Getting Started
 
 ### 1️⃣ Backend Setup
@@ -111,7 +108,7 @@ Built using **React**, **Node.js**, **Express**, and **MongoDB**, with a respons
 ```bash
 cd backend
 npm install
-````
+```
 
 ### Create a `.env` file in the `server/` directory:
 
@@ -176,9 +173,9 @@ Frontend runs by default at: http://localhost:5173/
 📧 Contact
 For feedback, contributions, or queries:
 
-    📧 Email: your@email.com
+    📧 Email: scbabai2704@gmail.com
 
-    🌐 GitHub: @yourgithub
+    🌐 GitHub: @SUGATACHANDA
 
 ## 📜 License
 
