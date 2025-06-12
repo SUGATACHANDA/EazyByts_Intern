@@ -20,7 +20,10 @@ Built using **React**, **Node.js**, **Express**, and **MongoDB**, with a respons
 ## 📁 Project Structure
 
 ```
-📦 EazyByts_Intern
+
+```
+
+📦 EazyByts
 ├─ client
 │  ├─ .env
 │  ├─ .gitignore
@@ -95,9 +98,12 @@ Built using **React**, **Node.js**, **Express**, and **MongoDB**, with a respons
    │  ├─ funFactRoutes.js
    │  ├─ projectRoutes.js
    │  └─ skillRoutes.js
-   └─ seed
-      └─ seedAdmin.js
-```
+   ├─ seed
+   │  └─ seedAdmin.js
+   └─ utils
+      └─ contactEmailTemplate.js
+
+````
 ## 🚀 Getting Started
 
 ### 1️⃣ Backend Setup
@@ -105,8 +111,9 @@ Built using **React**, **Node.js**, **Express**, and **MongoDB**, with a respons
 ```bash
 cd backend
 npm install
-```
-### Create a `.env` file in the `server/` directory: 
+````
+
+### Create a `.env` file in the `server/` directory:
 
 ```env
 MONGO_URI=your_mongodb_connection_string
@@ -114,6 +121,7 @@ JWT_SECRET=your_jwt_secret
 EMAIL_USER=your_email@example.com
 EMAIL_PASS=your_email_password_or_app_password
 ```
+
 ⚠️ Use Gmail App Passwords or environment-secured SMTP for production email services.
 
 ### Start the backend server:
@@ -121,6 +129,7 @@ EMAIL_PASS=your_email_password_or_app_password
 ```bash
 npm run dev
 ```
+
 Backend runs by default at: http://localhost:5000/api
 
 ### 2️⃣ Frontend Setup
@@ -129,26 +138,33 @@ Backend runs by default at: http://localhost:5000/api
 cd frontend
 npm install
 ```
+
 ### Create a `.env` file in `frontend/` directory:
+
 ```env
 VITE_API_URL=http://localhost:5000/api
 ```
+
 ### Start the frontend development server:
+
 ```bash
 npm run dev
 ```
+
 Frontend runs by default at: http://localhost:5173/
+
 ## 🛠 Features Breakdown
 
-| Feature          | Admin Dashboard | Public Website   |
-| ---------------- | --------------- | ---------------- |
-| Admin Login      | ✅               | ❌                |
-| Manage Projects  | ✅ (CRUD)        | ✅ (Dynamic View) |
-| Manage Skills    | ✅               | ✅ (Grouped List) |
-| Fun Facts        | ✅               | ✅                |
-| Contact Messages | ✅               | ✅ (Submit Only)  |
+| Feature          | Admin Dashboard | Public Website    |
+| ---------------- | --------------- | ----------------- |
+| Admin Login      | ✅              | ❌                |
+| Manage Projects  | ✅ (CRUD)       | ✅ (Dynamic View) |
+| Manage Skills    | ✅              | ✅ (Grouped List) |
+| Fun Facts        | ✅              | ✅                |
+| Contact Messages | ✅              | ✅ (Submit Only)  |
 
 ## 🖥️ Tech Stack
+
 | Layer    | Technology                              |
 | -------- | --------------------------------------- |
 | Frontend | React, Vite, Tailwind CSS, Lucide Icons |
@@ -163,8 +179,9 @@ For feedback, contributions, or queries:
     📧 Email: your@email.com
 
     🌐 GitHub: @yourgithub
+
 ## 📜 License
+
 This project is licensed under the MIT License.
 
 © 2024 SUGATA CHANDA
-
