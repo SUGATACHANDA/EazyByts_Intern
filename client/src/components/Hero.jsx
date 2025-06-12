@@ -14,7 +14,7 @@ const Hero = () => {
                     </p>
 
                     <button className="border border-purple-400 text-purple-400 px-6 py-3 hover:bg-purple-400 hover:text-white transition-colors">
-                        Contact me !!
+                        <a href="/contacts">Contact me!!!</a>
                     </button>
                 </div>
 

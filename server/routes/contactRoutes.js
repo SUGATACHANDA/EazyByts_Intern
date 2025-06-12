@@ -1,6 +1,7 @@
 const express = require('express');
 const Contact = require('../models/Contact');
 const nodemailer = require('nodemailer');
+const generateContactEmail = require('../utils/contactEmailTemplate');
 
 const router = express.Router();
 
@@ -12,30 +13,22 @@ router.post('/', async (req, res) => {
     }
 
     try {
-        // Save to DB
         const newMessage = new Contact({ name, email, title, message });
         await newMessage.save();
 
-        // Send email to site owner
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: process.env.EMAIL_USER,     // Your Gmail email
-                pass: process.env.EMAIL_PASS      // Your Gmail app password
-            }
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS,
+            },
         });
 
         await transporter.sendMail({
             from: `"${name}" <${email}>`,
             to: process.env.EMAIL_USER,
-            subject: `New Contact: ${title}`,
-            html: `
-        <h3>You received a new message</h3>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Title:</strong> ${title}</p>
-        <p><strong>Message:</strong><br/>${message}</p>
-      `
+            subject: `📬 New Contact Message: ${title}`,
+            html: generateContactEmail({ name, email, title, message }),
         });
 
         res.status(201).json({ message: 'Message sent successfully' });
