@@ -11,7 +11,7 @@ const projectRoutes = require('../routes/projectRoutes.js');
 dotenv.config();
 
 const app = express();
-app.use(cors());
+app.use(cors({ origin: 'https://sugata-chanda-backend.vercel.app/' }));
 app.use(express.json());
 
 mongoose.connect(process.env.MONGO_URI, {
