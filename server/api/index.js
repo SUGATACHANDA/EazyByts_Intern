@@ -25,6 +25,11 @@ app.use('/api/contact', contactRoutes);
 app.use('/api/skills', skillRoutes);
 app.use('/api/funfacts', funFactRoutes);
 app.use('/api/projects', projectRoutes);
+app.use('/',
+    (req, res) => {
+        res.send('Hello World!');
+    }
+)
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
