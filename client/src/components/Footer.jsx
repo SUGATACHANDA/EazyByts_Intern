@@ -34,7 +34,7 @@ const Footer = () => {
             </div>
 
             <div className="text-center text-gray-500 text-sm mt-6">
-                © Copyright 2025. Made by Sugata
+                © Copyright 2025. Made by Sugata Chanda
             </div>
         </footer>
     );
